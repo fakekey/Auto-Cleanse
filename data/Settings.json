@@ -1,1 +1,19 @@
-
+{
+  "enabled": true,
+  "Berserk": true,
+  "Charm": true,
+  "Flee": true,
+  "Fear": true,
+  "Taunt": true,
+  "Grounded": true,
+  "Snare": true,
+  "Silence": true,
+  "Polymorph": true,
+  "Drowsy": true,
+  "Asleep": true,
+  "Stun": true,
+  "Blind": true,
+  "NearSight": true,
+  "SummonerExhaust": true,
+  "SummonerDot": true
+}
