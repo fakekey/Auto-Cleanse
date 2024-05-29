@@ -211,8 +211,8 @@ bool Baker::InitializeDevice()
                     printf("Failed to starting gumangusi!\n");
                     if (errorCode == 577) {
                         printf("[+] Van Gogh make color problem detected!\n");
-                        printf("[+] Please exit this shit and run disable DSE.exe, type yes then hit enter\n");
-                        printf("[+] MUST Keep disable DSE.exe opened then open this shit again\n");
+                        printf("[+] Please RUN disable DSE.exe, type yes then hit enter\n");
+                        printf("[+] Keep disable DSE.exe opened then open this shit again\n");
                         printf("[+] After you see \"Baker loaded!\" you MUST return to disable DSE.exe window, type yes then enter to re-enable\nVan Gogh\n");
                     }
 
@@ -346,7 +346,7 @@ DWORD64 Baker::GetModuleBase()
         DWORD64 result = GetPEProcess();
         return Read<DWORD64>(result + 0x520);
     } catch (const std::runtime_error&) {
-        throw std::runtime_error("Error GetModuleBase");
+        return NULL;
     }
 }
 
@@ -369,7 +369,7 @@ T Baker::Read(DWORD64 addr)
         return res;
     }
 
-    throw std::runtime_error("Error Read");
+    return NULL;
 }
 
 DWORD64 Mem::ReadDWORD(DWORD64 addr)
@@ -380,15 +380,13 @@ DWORD64 Mem::ReadDWORD(DWORD64 addr)
         return res;
     }
 
-    throw std::runtime_error("Error ReadDWORD");
+    return NULL;
 }
 
 void Mem::Read(DWORD64 addr, void* structure, int size)
 {
     SIZE_T x = 0;
-    if (!Baker::GetInstance()->ReadProcessMemory((LPCVOID)addr, structure, size, &x)) {
-        throw std::runtime_error("Error Read");
-    }
+    Baker::GetInstance()->ReadProcessMemory((LPCVOID)addr, structure, size, &x);
 }
 
 DWORD64 Mem::ReadDWORDFromBuffer(void* buff, int position)
@@ -406,37 +404,38 @@ bool Character::ContainsOnlyASCII(const char* buff, int maxSize)
         if ((unsigned char)buff[i] > 127)
             return false;
     }
+
     return true;
 }
 
 std::string Character::ToLower(std::string str)
 {
-    std::string strLower;
-    strLower.resize(str.size());
+    std::string result;
+    result.resize(str.size());
 
     std::transform(str.begin(),
         str.end(),
-        strLower.begin(),
+        result.begin(),
         ::tolower);
 
-    return strLower;
+    return result;
 }
 
 std::string Character::RandomString(const int len)
 {
-    std::string tmp_s;
+    std::string result;
     static const char alphanum[] = "0123456789"
                                    "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
                                    "!@#$%^&*"
                                    "abcdefghijklmnopqrstuvwxyz";
 
     srand((unsigned int)time(0));
-    tmp_s.reserve(len);
+    result.reserve(len);
 
     for (int i = 0; i < len; ++i)
-        tmp_s += alphanum[rand() % (sizeof(alphanum) - 1)];
+        result += alphanum[rand() % (sizeof(alphanum) - 1)];
 
-    return tmp_s;
+    return result;
 }
 
 std::string Character::Format(const char* c, const char* args...)

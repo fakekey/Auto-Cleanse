@@ -19,37 +19,28 @@ BOOL WINAPI CtrlHandler(DWORD fdwCtrlType)
 
 void MainLoop(Game& game, Updater& updater, std::string& dataFolder)
 {
-    bool rehook = true;
     bool firstIter = true;
-    printf("[i] Waiting for League process...\n");
     while (true) {
-        bool isLeagueWindowActive = game.IsLeagueWindowActive();
         try {
-            if (rehook) {
-                game.HookToProcess();
-                rehook = false;
-                firstIter = true;
-                printf("[i] Found League process. Auto cleanse activated!\n");
-            } else {
-                game.MakeSnapshot();
-                // Shit started
-                if (game.gameTime > 2.0f) {
-                    // Init shit here
-                    if (firstIter) {
-                        updater.FirstStart(dataFolder);
-                        firstIter = false;
-                    }
+            game.HookToProcess();
+            game.MakeSnapshot();
+            // Shit started
+            if (game.gameTime > 2.0f) {
+                // Init shit here
+                if (firstIter) {
+                    updater.FirstStart(dataFolder);
+                    firstIter = false;
+                }
 
-                    // Update shit here
-                    if (isLeagueWindowActive) {
-                        updater.Update(game);
-                    }
+                // Update shit here
+                if (game.IsLeagueWindowActive()) {
+                    updater.Update(game);
                 }
             }
         } catch (const std::runtime_error& ex) {
-            printf("[E] %s\n\n", ex.what());
+            printf("[!] %s\n\n", ex.what());
             printf("[i] Waiting for League process...\n");
-            rehook = true;
+            firstIter = true;
         }
 
         Sleep(5);

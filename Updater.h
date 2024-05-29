@@ -12,4 +12,9 @@ public:
 
 private:
     json settings;
+    std::vector<BuffType> cleansable {};
+    bool InArray(const BuffType& value, const std::vector<BuffType>& array)
+    {
+        return std::find(array.begin(), array.end(), value) != array.end();
+    }
 };

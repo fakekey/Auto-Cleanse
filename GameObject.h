@@ -108,5 +108,6 @@ protected:
     static BYTE buff[sizeBuff];
 
 public:
+    static const char* ZOMBIES[3];
     static float gameTime;
 };

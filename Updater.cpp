@@ -2,16 +2,8 @@
 #include "Utils.h"
 #include <fstream>
 
-std::vector<BuffType> cleansable {};
-
-bool in_array(const BuffType& value, const std::vector<BuffType>& array)
-{
-    return std::find(array.begin(), array.end(), value) != array.end();
-}
-
 void Updater::Init()
 {
-    std::string windowClassName = Character::RandomString(10);
     std::string windowName = Character::RandomString(10);
     SetConsoleTitleA(windowName.c_str());
 }
@@ -69,7 +61,7 @@ void Updater::FirstStart(std::string& dataFolder)
 
 void Updater::Update(Game& game)
 {
-    if (!settings["enabled"]) {
+    if (!settings["Enabled"]) {
         return;
     }
 
@@ -77,7 +69,7 @@ void Updater::Update(Game& game)
     if (me.isAlive && !game.isChatOpen) {
         bool isShouldCleanse = false;
         for (auto& buff : me.buffs) {
-            if (in_array((BuffType)buff.type, cleansable) && buff.isAlive) {
+            if (InArray((BuffType)buff.type, cleansable) && buff.isAlive) {
                 isShouldCleanse = true;
                 break;
             }

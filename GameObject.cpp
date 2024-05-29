@@ -1,14 +1,36 @@
 #include "GameObject.h"
 #include "GameData.h"
-#include "GameObject.h"
 #include "Offsets.h"
 #include "Utils.h"
-#include <stdexcept>
 
 BYTE GameObject::buff[GameObject::sizeBuff] = {};
 BYTE GameObject::buffListBuffer[0x90] = {};
+const char* GameObject::ZOMBIES[3] = { "Sion", "KogMaw", "Karthus" };
 DWORD64 GameObject::spellSlotPointerBuffer[7] = {};
 float GameObject::gameTime = 0.f;
+
+bool IsZombie(const std::string& name)
+{
+    for (const char* zombie : GameObject::ZOMBIES) {
+        if (name == zombie) {
+            return true;
+        }
+    }
+    return false;
+}
+
+BuffInfo* GameObject::GetBuffByName(std::string buffName)
+{
+    float buffEndTime = 0.f;
+    BuffInfo* rightBuff = nullptr;
+    for (auto cbuff = buffs.begin(); cbuff != buffs.end(); ++cbuff) {
+        if (cbuff->name.compare(buffName) == 0 && cbuff->endTime > buffEndTime) {
+            buffEndTime = cbuff->endTime;
+            rightBuff = cbuff._Ptr;
+        }
+    }
+    return rightBuff;
+}
 
 void GameObject::LoadFromMem(DWORD64 base, bool deepLoad)
 {
@@ -24,14 +46,9 @@ void GameObject::LoadFromMem(DWORD64 base, bool deepLoad)
     if (deepLoad) {
         char nameBuff[50];
         memset(nameBuff, 0, sizeof(nameBuff));
+        Mem::Read(Mem::ReadDWORDFromBuffer(buff, Offsets::ObjName), nameBuff, 50);
+
         name = std::string("");
-
-        try {
-            Mem::Read(Mem::ReadDWORDFromBuffer(buff, Offsets::ObjName), nameBuff, 50);
-        } catch (const std::runtime_error&) {
-            memset(nameBuff, 0, sizeof(nameBuff));
-        }
-
         if (Character::ContainsOnlyASCII(nameBuff, 50)) {
             name = Character::ToLower(std::string(nameBuff));
         } else {
@@ -41,12 +58,7 @@ void GameObject::LoadFromMem(DWORD64 base, bool deepLoad)
         if (name == "") {
             char nameBuff2[50];
             memset(nameBuff2, 0, sizeof(nameBuff2));
-
-            try {
-                Mem::Read(address + Offsets::ObjName, nameBuff2, 50);
-            } catch (const std::runtime_error&) {
-                memset(nameBuff2, 0, sizeof(nameBuff2));
-            }
+            Mem::Read(address + Offsets::ObjName, nameBuff2, 50);
 
             if (Character::ContainsOnlyASCII(nameBuff2, 50)) {
                 name = Character::ToLower(std::string(nameBuff2));
@@ -59,7 +71,7 @@ void GameObject::LoadFromMem(DWORD64 base, bool deepLoad)
     // Check if alive
     DWORD32 spawnCount;
     memcpy(&spawnCount, &buff[Offsets::ObjSpawnCount], sizeof(int));
-    isAlive = spawnCount % 2 == 0;
+    isAlive = IsZombie(name) ? health > 0 : spawnCount % 2 == 0;
 
     LoadChampFromMem(base);
     LoadBuffFromMem(base);
@@ -97,18 +109,13 @@ void GameObject::LoadBuffFromMem(DWORD64 base)
 
         DWORD64 buffInfo, buffNamePtr;
         memcpy(&buffInfo, &buffListBuffer[Offsets::BuffEntryBuff], sizeof(DWORD64));
-        if (buffInfo <= 0x1000) {
+        if (buffInfo == NULL || (DWORD64)buffInfo <= 0x1000) {
             continue;
         }
         Mem::Read(buffInfo + Offsets::BuffName, &buffNamePtr, sizeof(DWORD64));
         memset(buffnamebuffer, 0, sizeof(buffnamebuffer));
 
-        try {
-            Mem::Read(buffNamePtr, buffnamebuffer, 240);
-        } catch (const std::runtime_error&) {
-            memset(buffnamebuffer, 0, sizeof(buffnamebuffer));
-        }
-
+        Mem::Read(buffNamePtr, buffnamebuffer, 240);
         if (std::string(buffnamebuffer) == "" || !Character::ContainsOnlyASCII(buffnamebuffer, 240)) {
             continue;
         }
@@ -134,17 +141,4 @@ void GameObject::LoadBuffFromMem(DWORD64 base)
 
         buffs.push_back(BuffInfo(buffnamebuffer, buffCount, buffCountAlt, buffCountAlt2, bufftype, buffStartTime, buffEndTime, isAlive));
     }
-}
-
-BuffInfo* GameObject::GetBuffByName(std::string buffName)
-{
-    float buffEndTime = 0.f;
-    BuffInfo* rightBuff = nullptr;
-    for (auto cbuff = buffs.begin(); cbuff != buffs.end(); ++cbuff) {
-        if (cbuff->name.compare(buffName) == 0 && cbuff->endTime > buffEndTime) {
-            buffEndTime = cbuff->endTime;
-            rightBuff = cbuff._Ptr;
-        }
-    }
-    return rightBuff;
 }

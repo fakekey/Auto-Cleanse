@@ -21,15 +21,10 @@ void Game::HookToProcess()
 {
     // Get the process ID
     if (!Baker::GetInstance()->GetProcessId()) {
-        printf("[E] \"League of Legends (TM) Client\" window not found!\n");
-        throw std::runtime_error("Vao game di moi dung dc chu thang lol!");
+        throw std::runtime_error("Please start game!");
     }
 
-    try {
-        moduleBaseAddr = Baker::GetInstance()->GetModuleBase();
-    } catch (const std::runtime_error& exception) {
-        throw exception;
-    }
+    moduleBaseAddr = Baker::GetInstance()->GetModuleBase();
 }
 
 bool Game::IsHookedToProcess()
@@ -44,16 +39,13 @@ bool Game::IsLeagueWindowActive()
 
 void Game::MakeSnapshot()
 {
-    try {
-        Mem::Read(moduleBaseAddr + Offsets::GameTime, &gameTime, sizeof(float));
-    } catch (const std::runtime_error& ex) {
-        throw ex;
-    }
+    Mem::Read(moduleBaseAddr + Offsets::GameTime, &gameTime, sizeof(float));
     // Checking chat
     DWORD64 chatInstance = Mem::ReadDWORD(moduleBaseAddr + Offsets::ChatClient);
     Mem::Read(chatInstance + Offsets::ChatIsOpen, &isChatOpen, sizeof(bool));
 
     if (gameTime > 2.0f) {
+        GameObject::gameTime = gameTime;
         ReadPlayer();
     }
 }
