@@ -27,13 +27,13 @@ enum BuffType {
     Invulnerability = 18,
     AttackSpeedSlow = 19,
     NearSight = 20,
+    Currency = 21,
     Fear = 22,
     Charm = 23,
     Poison = 24,
     Suppression = 25,
     Blind = 26,
     Counter = 27,
-    Currency = 21,
     Shred = 28,
     Flee = 29,
     Knockup = 30,
@@ -97,10 +97,17 @@ public:
     Spell R = Spell(SpellSlot::R);
     Spell D = Spell(SpellSlot::D);
     Spell F = Spell(SpellSlot::F);
+    Spell N_1 = Spell(SpellSlot::N_1);
+    Spell N_2 = Spell(SpellSlot::N_2);
+    Spell N_3 = Spell(SpellSlot::N_3);
+    Spell N_5 = Spell(SpellSlot::N_5);
+    Spell N_6 = Spell(SpellSlot::N_6);
+    Spell N_7 = Spell(SpellSlot::N_7);
+    Spell N_4 = Spell(SpellSlot::N_4);
     std::vector<BuffInfo> buffs;
 
 private:
-    static DWORD64 spellSlotPointerBuffer[7];
+    static DWORD64 spellSlotPointerBuffer[14];
     static BYTE buffListBuffer[0x90];
 
 protected:

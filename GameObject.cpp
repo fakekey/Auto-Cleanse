@@ -6,7 +6,7 @@
 BYTE GameObject::buff[GameObject::sizeBuff] = {};
 BYTE GameObject::buffListBuffer[0x90] = {};
 const char* GameObject::ZOMBIES[3] = { "Sion", "KogMaw", "Karthus" };
-DWORD64 GameObject::spellSlotPointerBuffer[7] = {};
+DWORD64 GameObject::spellSlotPointerBuffer[14] = {};
 float GameObject::gameTime = 0.f;
 
 bool IsZombie(const std::string& name)
@@ -16,6 +16,7 @@ bool IsZombie(const std::string& name)
             return true;
         }
     }
+
     return false;
 }
 
@@ -29,6 +30,7 @@ BuffInfo* GameObject::GetBuffByName(std::string buffName)
             rightBuff = cbuff._Ptr;
         }
     }
+
     return rightBuff;
 }
 
@@ -42,6 +44,7 @@ void GameObject::LoadFromMem(DWORD64 base, bool deepLoad)
     memcpy(&health, &buff[Offsets::ObjHealth], sizeof(float));
     memcpy(&visible, &buff[Offsets::ObjVisible], sizeof(bool));
     memcpy(&targetable, &buff[Offsets::ObjTargetable], sizeof(bool));
+    memcpy(&level, &buff[Offsets::ObjLevel], sizeof(short));
 
     if (deepLoad) {
         char nameBuff[50];
@@ -79,7 +82,7 @@ void GameObject::LoadFromMem(DWORD64 base, bool deepLoad)
 
 void GameObject::LoadChampFromMem(DWORD64 base)
 {
-    memcpy(&spellSlotPointerBuffer, &buff[Offsets::ObjSpellBook], sizeof(DWORD64) * 6);
+    memcpy(&spellSlotPointerBuffer, &buff[Offsets::ObjSpellBook], sizeof(DWORD64) * 13);
 
     Q.LoadFromMem(spellSlotPointerBuffer[0]);
     W.LoadFromMem(spellSlotPointerBuffer[1]);
@@ -87,8 +90,13 @@ void GameObject::LoadChampFromMem(DWORD64 base)
     R.LoadFromMem(spellSlotPointerBuffer[3]);
     D.LoadFromMem(spellSlotPointerBuffer[4]);
     F.LoadFromMem(spellSlotPointerBuffer[5]);
-
-    memcpy(&level, &buff[Offsets::ObjLevel], sizeof(short));
+    N_1.LoadFromMem(spellSlotPointerBuffer[6]);
+    N_2.LoadFromMem(spellSlotPointerBuffer[7]);
+    N_3.LoadFromMem(spellSlotPointerBuffer[8]);
+    N_5.LoadFromMem(spellSlotPointerBuffer[9]);
+    N_6.LoadFromMem(spellSlotPointerBuffer[10]);
+    N_7.LoadFromMem(spellSlotPointerBuffer[11]);
+    N_4.LoadFromMem(spellSlotPointerBuffer[12]);
 }
 
 void GameObject::LoadBuffFromMem(DWORD64 base)

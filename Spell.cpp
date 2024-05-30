@@ -4,8 +4,8 @@
 #include "Utils.h"
 
 BYTE Spell::buffer[0x150];
-const char* Spell::spellTypeName[6] = { "Q", "W", "E", "R", "D", "F" };
-const HKey Spell::spellSlotKey[6] = { HKey::Q, HKey::W, HKey::E, HKey::R, HKey::D, HKey::F };
+const char* Spell::spellTypeName[13] = { "Q", "W", "E", "R", "D", "F", "1", "2", "3", "5", "6", "7", "4" };
+const HKey Spell::spellSlotKey[13] = { HKey::Q, HKey::W, HKey::E, HKey::R, HKey::D, HKey::F, HKey::N_1, HKey::N_2, HKey::N_3, HKey::N_5, HKey::N_6, HKey::N_7, HKey::N_4 };
 
 std::map<std::string, SummonerSpellType> Spell::summonerSpellTypeDict = {
     { std::string("summonerhaste"), SummonerSpellType::GHOST },
@@ -15,15 +15,11 @@ std::map<std::string, SummonerSpellType> Spell::summonerSpellTypeDict = {
     { std::string("summonermana"), SummonerSpellType::CLARITY },
     { std::string("summonermark"), SummonerSpellType::SNOWBALL },
     { std::string("summonerflash"), SummonerSpellType::FLASH },
-    { std::string("summonerteleport"), SummonerSpellType::TELEPORT },
-    { std::string("s12_summonerteleport"), SummonerSpellType::TELEPORT },
-    { std::string("s12_summonerteleportupgrade"), SummonerSpellType::TELEPORT },
     { std::string("summonerboost"), SummonerSpellType::CLEANSE },
     { std::string("summonerdot"), SummonerSpellType::IGNITE },
-    { std::string("summonersmite"), SummonerSpellType::SMITE },
     { std::string("summonerrecall"), SummonerSpellType::RECALL },
-    { std::string("s12_summonersmiteplayerganker"), SummonerSpellType::SMITE },
-    { std::string("s12_summonersmiteduel"), SummonerSpellType::SMITE },
+    { std::string("quicksilversash"), SummonerSpellType::QSS },
+    { std::string("itemmercurial"), SummonerSpellType::QSS },
 };
 
 float Spell::GetRemainingCooldown(float gameTime)
@@ -60,6 +56,7 @@ void Spell::LoadFromMem(DWORD64 base, bool deepLoad)
     DWORD64 spellNamePtr = Mem::ReadDWORD(spellDataPtr + Offsets::SpellDataSpellName);
 
     char buff[50];
+    memset(buff, 0, sizeof(buff));
     Mem::Read(spellNamePtr, buff, 50);
     if (Character::ContainsOnlyASCII(buff, 50)) {
         name = Character::ToLower(std::string(buff));

@@ -40,6 +40,7 @@ void MainLoop(Game& game, Updater& updater, std::string& dataFolder)
         } catch (const std::runtime_error& ex) {
             printf("[!] %s\n\n", ex.what());
             printf("[i] Waiting for League process...\n");
+            game.gameTime = 0.0f;
             firstIter = true;
         }
 

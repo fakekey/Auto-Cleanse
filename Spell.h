@@ -12,7 +12,14 @@ enum class SpellSlot {
     E,
     R,
     D,
-    F
+    F,
+    N_1,
+    N_2,
+    N_3,
+    N_5,
+    N_6,
+    N_7,
+    N_4
 };
 
 enum SummonerSpellType {
@@ -29,7 +36,8 @@ enum SummonerSpellType {
     IGNITE,
     SMITE,
     RECALL,
-    WARD
+    WARD,
+    QSS
 };
 
 class Spell {
@@ -59,7 +67,7 @@ public:
 
 private:
     static BYTE buffer[0x150];
-    static const char* spellTypeName[6];
-    static const HKey spellSlotKey[6];
+    static const char* spellTypeName[13];
+    static const HKey spellSlotKey[13];
     static std::map<std::string, SummonerSpellType> summonerSpellTypeDict;
 };

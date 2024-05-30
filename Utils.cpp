@@ -103,10 +103,10 @@ bool Baker::InitializeDevice()
         dataLocation = applicationPath + L"driver64.dat";
 
         if (!std::filesystem::exists(dataLocation)) {
-            serviceName = L"gumangusi";
+            serviceName = L"chokevy";
             processEventName = L"DBKProcList60";
             threadEventName = L"DBKThreadList60";
-            sysfile = L"gumangusi64.sys";
+            sysfile = L"chokevy64.sys";
         } else {
             std::wifstream driverData(dataLocation);
             if (driverData.is_open()) {
@@ -130,7 +130,7 @@ bool Baker::InitializeDevice()
 
         driverLocation = applicationPath + sysfile;
         if (!std::filesystem::exists(driverLocation)) {
-            printf("Baker64.sys not found!\n");
+            printf("Chokevy64.sys not found!\n");
 
             free(appPath);
 
@@ -173,7 +173,7 @@ bool Baker::InitializeDevice()
                 nullptr // no password
             );
         } else {
-            // Make sure the service points to the gumangusi64 file
+            // Make sure the service points to the chokevy64 file
             ChangeServiceConfigW(hService,
                 SERVICE_KERNEL_DRIVER,
                 SERVICE_DEMAND_START,
@@ -208,12 +208,11 @@ bool Baker::InitializeDevice()
             if (!StartService(hService, 0, nullptr)) {
                 DWORD errorCode = GetLastError();
                 if (errorCode != 1056) {
-                    printf("Failed to starting gumangusi!\n");
+                    printf("Failed to load Chokevy64.sys!\n");
                     if (errorCode == 577) {
-                        printf("[+] Van Gogh make color problem detected!\n");
-                        printf("[+] Please RUN disable DSE.exe, type yes then hit enter\n");
-                        printf("[+] Keep disable DSE.exe opened then open this shit again\n");
-                        printf("[+] After you see \"Baker loaded!\" you MUST return to disable DSE.exe window, type yes then enter to re-enable\nVan Gogh\n");
+                        printf("[+] Please RUN disable DSE.exe, type yes then hit enter.\n");
+                        printf("[+] Keep disable DSE.exe opened then open this shit again.\n");
+                        printf("[+] After saw \"Waiting for League process...\" you MUST return to disable DSE.exe window, type yes then enter.\n");
                     }
 
                     CloseServiceHandle(hService);
