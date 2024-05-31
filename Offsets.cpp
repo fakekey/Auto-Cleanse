@@ -2,9 +2,9 @@
 
 Offsets::Offsets() {};
 
-int Offsets::GameTime = 0x19457F8;
-int Offsets::LocalPlayer = 0x1957C98;
-int Offsets::ChatClient = 0x1958B90;
+int Offsets::GameTime = 0x19456F8;
+int Offsets::LocalPlayer = 0x1957B98;
+int Offsets::ChatClient = 0x1958A90;
 int Offsets::ChatIsOpen = 0x588;
 int Offsets::ObjIndex = 0x10;
 int Offsets::ObjNetworkID = 0xC8;
