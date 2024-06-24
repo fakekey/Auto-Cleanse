@@ -2,9 +2,9 @@
 
 Offsets::Offsets() {};
 
-int Offsets::GameTime = 0x19456F8;
-int Offsets::LocalPlayer = 0x1957B98;
-int Offsets::ChatClient = 0x1958A90;
+int Offsets::GameTime = 0x1952A18;
+int Offsets::LocalPlayer = 0x19661E8;
+int Offsets::ChatClient = 0x1966398;
 int Offsets::ChatIsOpen = 0x588;
 int Offsets::ObjIndex = 0x10;
 int Offsets::ObjNetworkID = 0xC8;
@@ -12,8 +12,8 @@ int Offsets::ObjVisible = 0x348;
 int Offsets::ObjSpawnCount = 0x360;
 int Offsets::ObjTargetable = 0x1018;
 int Offsets::ObjHealth = 0x11E8;
-int Offsets::ObjName = 0x4438;
-int Offsets::ObjLevel = 0x4E68;
+int Offsets::ObjName = 0x4440;
+int Offsets::ObjLevel = 0x4E70;
 
 int Offsets::ObjSpellBook = 0x3CC0;
 int Offsets::SpellSlotSpellInfo = 0x140;
